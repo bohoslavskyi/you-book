@@ -1,0 +1,4 @@
+[tool.black]
+line-length = 120
+exclude = '(migrations|__pycache__|manage.py|settings.py)'
+target-version = ['py312']
