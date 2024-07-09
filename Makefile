@@ -29,3 +29,34 @@ build-up:
 
 logs:
 	docker compose --file ${DOCKER_COMPOSE_FILE} --env-file ${ENV_FILE} logs -f
+
+
+#==============#
+#== DATABASE ==#
+#==============#
+generate-migrations:
+	docker compose --file ${DOCKER_COMPOSE_FILE} --env-file ${ENV_FILE} run --rm app sh -c "python manage.py makemigrations"
+
+migrate:
+	docker compose --file ${DOCKER_COMPOSE_FILE} --env-file ${ENV_FILE} run --rm app sh -c "python manage.py migrate"
+
+
+#===========#
+#== TOOLS ==#
+#===========#
+manage:
+	docker compose --file ${DOCKER_COMPOSE_FILE} --env-file ${ENV_FILE} run --rm app sh -c "python manage.py $(command)"
+
+lint:
+	docker compose --file ${DOCKER_COMPOSE_FILE} --env-file ${ENV_FILE} run --rm app sh -c "flake8"
+
+code-format:
+	docker compose --file ${DOCKER_COMPOSE_FILE} --env-file ${ENV_FILE} run --rm app sh -c "isort . && black ."
+
+test:
+	docker compose --file ${DOCKER_COMPOSE_FILE} --env-file ${ENV_FILE} run --rm app sh -c "python manage.py test"
+
+pre-commit-check:
+	make lint
+	make code-format
+	make test
